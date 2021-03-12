@@ -8,6 +8,7 @@
 package com.onarandombox.MultiverseCore.commands;
 
 import com.onarandombox.MultiverseCore.MultiverseCore;
+import com.pneumaticraft.commandhandler.CommandHandler;
 import org.bukkit.ChatColor;
 import org.bukkit.command.CommandSender;
 import org.bukkit.permissions.PermissionDefault;
@@ -23,8 +24,8 @@ public class RegenCommand extends MultiverseCommand {
     public RegenCommand(MultiverseCore plugin) {
         super(plugin);
         this.setName("Regenerates a World");
-        this.setCommandUsage("/mv regen" + ChatColor.GREEN + " {WORLD}" + ChatColor.GOLD + " [-s [SEED]]");
-        this.setArgRange(1, 3);
+        this.setCommandUsage("/mv regen" + ChatColor.GREEN + " {WORLD}" + ChatColor.GOLD + " [-s [SEED]] [--keep-gamerules]");
+        this.setArgRange(1, 4);
         this.addKey("mvregen");
         this.addKey("mv regen");
         this.addCommandExample("You can use the -s with no args to get a new seed:");
@@ -41,12 +42,13 @@ public class RegenCommand extends MultiverseCommand {
         Boolean randomseed = (args.size() == 2 && args.get(1).equalsIgnoreCase("-s"));
         String seed = (args.size() == 3) ? args.get(2) : "";
 
-        Class<?>[] paramTypes = {String.class, Boolean.class, Boolean.class, String.class};
+        Class<?>[] paramTypes = {String.class, Boolean.class, Boolean.class, String.class, Boolean.class};
         List<Object> objectArgs = new ArrayList<Object>();
         objectArgs.add(args.get(0));
         objectArgs.add(useseed);
         objectArgs.add(randomseed);
         objectArgs.add(seed);
+        objectArgs.add(CommandHandler.hasFlag("--keep-gamerules", args));
         this.plugin.getCommandHandler().queueCommand(sender, "mvregen", "regenWorld", objectArgs,
                 paramTypes, ChatColor.GREEN + "World Regenerated!", ChatColor.RED + "World could NOT be regenerated!");
     }

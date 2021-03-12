@@ -1121,8 +1121,8 @@ public class MultiverseCore extends JavaPlugin implements MVPlugin, Core {
      */
     @Override
     @Deprecated
-    public Boolean regenWorld(String name, Boolean useNewSeed, Boolean randomSeed, String seed) {
-        return this.worldManager.regenWorld(name, useNewSeed, randomSeed, seed);
+    public Boolean regenWorld(String name, Boolean useNewSeed, Boolean randomSeed, String seed, Boolean keepGameRules) {
+        return this.worldManager.regenWorld(name, useNewSeed, randomSeed, seed, keepGameRules);
     }
 
     /**

@@ -118,17 +118,18 @@ public interface Core {
     /**
      * Used by queued commands to regenerate a world on a delay.
      *
-     * @param name Name of the world to regenerate
-     * @param useNewSeed If a new seed should be used
-     * @param randomSeed IF the new seed should be random
-     * @param seed The seed of the world.
+     * @param name          Name of the world to regenerate
+     * @param useNewSeed    If a new seed should be used
+     * @param randomSeed    If the new seed should be random
+     * @param seed          The seed of the world.
+     * @param keepGameRules If GameRules should be kept on world regen.
      *
      * @return True if success, false if fail.
      *
-     * @deprecated Use {@link MVWorldManager#regenWorld(String, boolean, boolean, String)} instead.
+     * @deprecated Use {@link MVWorldManager#regenWorld(String, boolean, boolean, String, boolean)} instead.
      */
     @Deprecated
-    Boolean regenWorld(String name, Boolean useNewSeed, Boolean randomSeed, String seed);
+    Boolean regenWorld(String name, Boolean useNewSeed, Boolean randomSeed, String seed, Boolean keepGameRules);
 
     /**
      * Decrements the number of plugins that have specifically hooked into core.
