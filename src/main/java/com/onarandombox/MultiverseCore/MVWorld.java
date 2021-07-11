@@ -20,15 +20,8 @@ import com.onarandombox.MultiverseCore.exceptions.PropertyDoesNotExistException;
 import me.main__.util.SerializationConfig.ChangeDeniedException;
 import me.main__.util.SerializationConfig.NoSuchPropertyException;
 import me.main__.util.SerializationConfig.VirtualProperty;
-import org.bukkit.ChatColor;
-import org.bukkit.Difficulty;
-import org.bukkit.GameMode;
-import org.bukkit.Location;
-import org.bukkit.Material;
-import org.bukkit.World;
+import org.bukkit.*;
 import org.bukkit.World.Environment;
-import org.bukkit.WorldType;
-import org.bukkit.command.CommandSender;
 import org.bukkit.configuration.serialization.SerializableAs;
 import org.bukkit.entity.Player;
 import org.bukkit.permissions.Permission;
@@ -41,7 +34,6 @@ import java.util.Collections;
 import java.util.List;
 import java.util.Map;
 import java.util.UUID;
-import java.util.logging.Level;
 
 /**
  * The implementation of a Multiverse handled world.
@@ -54,6 +46,7 @@ public class MVWorld implements MultiverseWorld {
     private final String name; // The Worlds Name, EG its folder name.
     private final UUID worldUID;
     private final WorldProperties props;
+    private final String coloredname;
 
     public MVWorld(MultiverseCore plugin, World world, WorldProperties properties) {
         this(plugin, world, properties, true);
@@ -90,6 +83,7 @@ public class MVWorld implements MultiverseWorld {
         this.initPerms();
 
         this.props.flushChanges();
+        coloredname = getColoredName();
 
         validateProperties();
     }
@@ -516,9 +510,21 @@ public class MVWorld implements MultiverseWorld {
      */
     @Override
     public String getColoredWorldString() {
+        return coloredname;
+    }
+
+    public String getColoredName() {
         if (props.getAlias().length() == 0) {
             props.setAlias(this.getName());
         }
+
+        final String REPLACE_COLOR_PATTERN = "(&)?&([0-9a-fk-orA-FK-OR])";
+        final String REPLACE_RGB_PATTERN = "(&)?&#([A-Fa-f0-9])([A-Fa-f0-9])([A-Fa-f0-9])([A-Fa-f0-9])([A-Fa-f0-9])([A-Fa-f0-9])";
+
+        // Parse rgb color codes
+        String parsedRBGAlias = props.getAlias().replaceAll(REPLACE_RGB_PATTERN, "§x§$2§$3§$4§$5§$6§$7");
+        // normal code code
+        String parsedColorAlias = parsedRBGAlias.replaceAll(REPLACE_COLOR_PATTERN, "§$2");
 
         if ((props.getColor() == null) || (props.getColor().getColor() == null)) {
             this.props.setColor(EnglishChatColor.WHITE);
@@ -527,7 +533,7 @@ public class MVWorld implements MultiverseWorld {
         StringBuilder nameBuilder = new StringBuilder().append(props.getColor().getColor());
         if (props.getStyle().getColor() != null)
             nameBuilder.append(props.getStyle().getColor());
-        nameBuilder.append(props.getAlias()).append(ChatColor.WHITE).toString();
+        nameBuilder.append(parsedColorAlias).append(ChatColor.WHITE);
 
         return nameBuilder.toString();
     }
